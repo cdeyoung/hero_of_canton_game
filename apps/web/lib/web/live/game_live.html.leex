@@ -1,0 +1,84 @@
+<h1 class="text-4xl text-center mb-4 font-bold text-gray-900">The Hero of Canton Game</h1>
+
+<p class="text-gray-900 text-center">Use the buttons to move around the game board and beat up your enemies.</p>
+
+<section class="flex">
+  <div class="w-4/6">
+    <%= if @player do %>
+      <form class="control-button" phx-submit="move">
+        <input type=hidden name="row" value="<%= elem(@players[@player].position, 0) %>">
+        <input type=hidden name="column" value="<%= elem(@players[@player].position, 1) - 1 %>">
+        <button type="submit" title="Move Left">
+          <img class="h-8" src="images/left.svg">
+        </button>
+      </form>
+
+      <form class="control-button" phx-submit="move">
+        <input type=hidden name="row" value="<%= elem(@players[@player].position, 0) + 1 %>">
+        <input type=hidden name="column" value="<%= elem(@players[@player].position, 1) %>">
+        <button type="submit" title="Move Down">
+          <img class="h-8" src="images/down.svg">
+        </button>
+      </form>
+
+      <form class="control-button" phx-submit="move">
+        <input type=hidden name="row" value="<%= elem(@players[@player].position, 0) - 1 %>">
+        <input type=hidden name="column" value="<%= elem(@players[@player].position, 1) %>">
+        <button type="submit" title="Move Up">
+          <img class="h-8" src="images/up.svg">
+        </button>
+      </form>
+
+      <form class="control-button" phx-submit="move">
+        <input type=hidden name="row" value="<%= elem(@players[@player].position, 0) %>">
+        <input type=hidden name="column" value="<%= elem(@players[@player].position, 1) + 1 %>">
+        <button type="submit" title="Move Right">
+          <img class="h-8" src="images/right.svg">
+        </button>
+      </form>
+
+      <form class="control-button" phx-submit="attack">
+        <input type=hidden name="row" value="<%= elem(@players[@player].position, 0) %>">
+        <input type=hidden name="column" value="<%= elem(@players[@player].position, 1) %>">
+        <button class="pl-4" type="submit" title="Attack!">
+          <img class="h-8" src="images/attack.svg">
+        </button>
+      </form>
+
+      <button class="pl-4" phx-click="restart" title="Restart the Game">
+        <img class="h-8" src="images/restart.svg">
+      </button>
+    <% end %>
+  </div>
+
+  <div class="w-2/6">
+    <form class="add-player" phx-submit="add-player">
+      <input class="add-player-input bg-gray-200 appearance-none border-2 border-gray-400 rounded h-8 w-64 text-gray-900 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="text" name="add-player" value="<%= @player %>" placeholder="Connect to Player" autofocus autocomplete="off">
+
+      <button class="add-player-submit" type="submit" title="Connect to Player">
+        <img class="h-8" src="images/add.svg">
+      </button>
+    </form>
+  </div>
+</section>
+<%= for row <- 0..9 do %>
+  <section class="flex">
+    <%= for column <- 0..9 do %>
+      <div class="flex-1 bg-gray-<%= if rem(row + column, 2) == 0, do: 300, else: 400 %> h-20">
+        <%= for p <- Map.keys(@players) do %>
+          <%= if p && @players[p].position == {row, column} do %>
+            <div class="player">
+              <img <%= if @player == p do %>id="on-top"<% end %> class="token h-20" src="<%= @players[p].avatar %>" alt="Player piece">
+            </div>
+          <% end %>
+        <% end %>
+
+        <%= for w <- @walls do %>
+          <%= if w == {row, column} do %>
+            <img class="object-none object-center bg-gray-400 w-32 h-32" src="images/bricks.png" alt ="Bricks">
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+<% end %>

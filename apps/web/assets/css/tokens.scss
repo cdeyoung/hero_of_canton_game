@@ -1,0 +1,21 @@
+.control-button {
+  display: inline;
+}
+
+.player {
+  position: relative;
+  width: 100%;
+
+  .token {
+    position: absolute;
+    display: block;
+    margin: 0 auto;
+    left: 50%;
+    margin-left: -2.4rem;
+    z-index: 100;
+  }
+}
+
+#on-top {
+  z-index: 1000;
+}

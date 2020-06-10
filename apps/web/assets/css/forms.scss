@@ -1,0 +1,11 @@
+.add-player {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.add-player-input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+}

@@ -1,0 +1,46 @@
+@tailwind base;
+
+body {
+  @apply p-8;
+}
+
+p {
+  @apply mb-4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply mb-4;
+}
+
+button {
+  border: none;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
+
+  &:active {
+    outline: none;
+    border: none;
+  }
+}
+
+@tailwind components;
+
+.info {
+  @apply bg-teal-100 border-l-4 border-teal-500 text-teal-700 p-4;
+}
+
+.warning {
+  @apply bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4;
+}
+
+.error {
+  @apply bg-red-100 border-l-4 border-red-500 text-red-700 p-4;
+}
+
+@tailwind utilities;
+@import "./alerts.scss";
+@import "./forms.scss";
+@import "./tokens.scss";
