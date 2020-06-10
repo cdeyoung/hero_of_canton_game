@@ -16,6 +16,10 @@
   }
 }
 
+.tile {
+  overflow: hidden;
+}
+
 #on-top {
   z-index: 1000;
 }
