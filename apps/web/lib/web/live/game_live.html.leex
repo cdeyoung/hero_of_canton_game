@@ -44,11 +44,11 @@
           <img class="h-8" src="images/attack.svg">
         </button>
       </form>
-
-      <button class="pl-4" phx-click="restart" title="Restart the Game">
-        <img class="h-8" src="images/restart.svg">
-      </button>
     <% end %>
+
+    <button class="pl-4" phx-click="restart" title="Restart the Game">
+      <img class="h-8" src="images/restart.svg">
+    </button>
   </div>
 
   <div class="w-2/6">
@@ -64,7 +64,7 @@
 <%= for row <- 0..9 do %>
   <section class="flex">
     <%= for column <- 0..9 do %>
-      <div class="flex-1 bg-gray-<%= if rem(row + column, 2) == 0, do: 300, else: 400 %> h-20">
+      <div class="tile flex-1 bg-gray-<%= if rem(row + column, 2) == 0, do: 300, else: 400 %> h-20">
         <%= for p <- Map.keys(@players) do %>
           <%= if p && @players[p].position == {row, column} do %>
             <div class="player">
