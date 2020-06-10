@@ -6,7 +6,15 @@ defmodule Game.MixProject do
       apps_path: "apps",
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      releases: [
+        game: [
+          applications: [
+            data: :permanent,
+            web: :permanent
+          ]
+        ]
+      ]
     ]
   end
 
