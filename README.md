@@ -2,6 +2,10 @@
 
 An experiment with Phoenix LiveView.
 
+## Assignment
+
+Please read the project requirements located in the [assignment.pdf](assignment.pdf) file in the root of this project.
+
 ## Getting Started
 
 This is just a vanilla Elixir/Phoenix project with no other external Elixir dependencies and only TailwindCSS on the front-end side. To try it out on your local machine:
