@@ -18,4 +18,3 @@ This is just a vanilla Elixir/Phoenix project with no other external Elixir depe
 6. Once `git` has done it's magic, `cd` into `your_project_directory/apps/web/assets` and type `npm install`.
 7. Then, `cd` back to `your_project_directory` and type `mix deps.get` to get all the dependencies, even though there aren't any, because it is nice to have good habits.
 8. Then, if my brain hasn't betrayed me again, you can run `iex -S mix phx.server` and browse to [The Hero of Canton Game](http://localhost:4000).
-
