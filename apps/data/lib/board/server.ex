@@ -4,8 +4,6 @@ defmodule Board.Server do
   """
   use GenServer
 
-  alias Players.Server, as: PS
-
   ################################################################################
   # Client API.
   ################################################################################
@@ -14,7 +12,7 @@ defmodule Board.Server do
   Create a new player in the Players.Server GenServer and store the PID in the Board.Server GenServer.
   """
   def add_player(player_name) do
-    {:global, PS.player_pid(player_name)}
+    {:global, Game.player_pid(player_name)}
     |> GenServer.whereis()
     |> case do
       nil ->
@@ -29,14 +27,14 @@ defmodule Board.Server do
   Get the avatar out of the specified player's process.
   """
   def get_player_avatar(player_name) do
-    GenServer.call({:global, PS.player_pid(player_name)}, :get_player_avatar)
+    GenServer.call({:global, Game.player_pid(player_name)}, :get_player_avatar)
   end
 
   @doc """
   Get the current position out of the specified player's process.
   """
   def get_player_position(player_name) do
-    GenServer.call({:global, PS.player_pid(player_name)}, :get_player_position)
+    GenServer.call({:global, Game.player_pid(player_name)}, :get_player_position)
   end
 
   @doc """
@@ -57,7 +55,7 @@ defmodule Board.Server do
   Check to see if the specified player is alive.
   """
   def is_alive?(player_name) do
-    GenServer.call({:global, PS.player_pid(player_name)}, :is_alive)
+    GenServer.call({:global, Game.player_pid(player_name)}, :is_alive)
   end
 
   @doc """
@@ -87,7 +85,7 @@ defmodule Board.Server do
   Set the specified player's current position.
   """
   def set_player_position(player_name, position) do
-    GenServer.cast({:global, PS.player_pid(player_name)}, {:set_player_position, position})
+    GenServer.cast({:global, Game.player_pid(player_name)}, {:set_player_position, position})
   end
 
   @doc """
@@ -123,12 +121,12 @@ defmodule Board.Server do
   @impl true
   def handle_call({:add_player, player_name}, _from, state) do
     if state.available_avatars |> length > 0 do
-      player = PS.player_pid(player_name)
+      player = Game.player_pid(player_name)
       avatar = Enum.random(state.available_avatars)
       new_state = state
               |> Map.put(:available_avatars, Enum.filter(state.available_avatars, fn(a) -> a != avatar end))
               |> Map.put(:players, [ {:global, player} | state.players ])
-      PS.start_link({player_name, avatar, _random_position(state.walls)})
+      Game.start_link({player_name, avatar, _random_position(state.walls)})
 
       {:reply, :ok, new_state}
     else
@@ -163,14 +161,14 @@ defmodule Board.Server do
 
   @impl true
   def handle_cast({:kill_player, player_name}, state) do
-    GenServer.cast({:global, PS.player_pid(player_name)}, :kill_player)
+    GenServer.cast({:global, Game.player_pid(player_name)}, :kill_player)
     _resurrection_timer(player_name)
     {:noreply, state}
   end
 
   @impl true
   def handle_info({:resurrect_player, player_name}, state) do
-    GenServer.cast({:global, PS.player_pid(player_name)}, {:resurrect_player, _random_position(state.walls)})
+    GenServer.cast({:global, Game.player_pid(player_name)}, {:resurrect_player, _random_position(state.walls)})
     {:noreply, state}
   end
 

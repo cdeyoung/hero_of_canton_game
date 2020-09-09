@@ -1,8 +1,6 @@
 defmodule Web.GameLive do
   use Web, :live_view
 
-  alias Board.Server, as: BS
-
   ################################################################################
   # LiveView Callbacks.
   ################################################################################
@@ -13,12 +11,12 @@ defmodule Web.GameLive do
       :timer.send_interval(1000, self(), :tick)
     end
 
-    {:ok, assign(socket, player: nil, players: _update_players_data(), walls: BS.get_walls())}
+    {:ok, assign(socket, player: nil, players: _update_players_data(), walls: Game.get_walls())}
   end
 
   @impl true
   def handle_event("add-player", %{"add-player" => player_name}, socket) do
-    case BS.add_player(player_name) do
+    case Game.add_player(player_name) do
       :ok ->
         {:noreply, assign(socket, players: _update_players_data(), player: player_name)}
 
@@ -31,7 +29,7 @@ defmodule Web.GameLive do
 
   @impl true
   def handle_event("attack", %{"row" => row, "column" => column}, socket) do
-    case BS.is_alive?(socket.assigns.player) do
+    case Game.is_alive?(socket.assigns.player) do
       true ->
         {row, column} = _convert_coordinates_to_int(row, column)
         attack = [
@@ -44,7 +42,7 @@ defmodule Web.GameLive do
         |> Map.keys()
         |> Enum.each(fn(player) ->
           if player != socket.assigns.player && Enum.member?(attack, socket.assigns.players[player].position) do
-            BS.kill_player(player)
+            Game.kill_player(player)
           end
         end)
 
@@ -58,9 +56,9 @@ defmodule Web.GameLive do
   @impl true
   def handle_event("move", %{"row" => row, "column" => column}, socket) do
     position = _convert_coordinates_to_int(row, column)
-    case BS.is_alive?(socket.assigns.player) && BS.is_move_valid?(position) do
+    case Game.is_alive?(socket.assigns.player) && Game.is_move_valid?(position) do
       true ->
-        BS.set_player_position(socket.assigns.player, position)
+        Game.set_player_position(socket.assigns.player, position)
         {:noreply, assign(socket, players: _update_players_data())}
 
       false ->
@@ -70,8 +68,8 @@ defmodule Web.GameLive do
 
   @impl true
   def handle_event("restart", _, socket) do
-    BS.restart_game()
-    {:noreply, assign(socket, player: nil, players: %{}, walls: BS.get_walls())}
+    Game.restart_game()
+    {:noreply, assign(socket, player: nil, players: %{}, walls: Game.get_walls())}
   end
 
   @impl true
@@ -88,11 +86,11 @@ defmodule Web.GameLive do
   end
 
   defp _update_players_data do
-    BS.get_players()
+    Game.get_players()
     |> Enum.reduce(%{}, fn(player, acc) ->
       acc
-      |> put_in(Enum.map([player, :position], &Access.key(&1, %{})), BS.get_player_position(player))
-      |> put_in(Enum.map([player, :avatar], &Access.key(&1, %{})), BS.get_player_avatar(player))
+      |> put_in(Enum.map([player, :position], &Access.key(&1, %{})), Game.get_player_position(player))
+      |> put_in(Enum.map([player, :avatar], &Access.key(&1, %{})), Game.get_player_avatar(player))
     end)
   end
 end
