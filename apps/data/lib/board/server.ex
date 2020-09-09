@@ -126,7 +126,7 @@ defmodule Board.Server do
       new_state = state
               |> Map.put(:available_avatars, Enum.filter(state.available_avatars, fn(a) -> a != avatar end))
               |> Map.put(:players, [ {:global, player} | state.players ])
-      Game.start_link({player_name, avatar, _random_position(state.walls)})
+      Game.start_player_link({player_name, avatar, _random_position(state.walls)})
 
       {:reply, :ok, new_state}
     else
